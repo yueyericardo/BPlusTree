@@ -302,6 +302,7 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
                 // TODO if go to tree root, there is no need to update, the code now actually update something he should not touch (solved)
                 // TODO 问题变成了最右面的最小值改变，根结点不会被改变
                 // Internal node 不会有重复
+                // TODO 内部节点child0改变不应该更新内部节点的父亲
                 int root_before_change = root->k[i-1];
                 root->k[i-1]=y->k[0];
                 printf("update root, root: %d changed to %d\n", root_before_change ,root->k[i-1]);
