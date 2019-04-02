@@ -28,6 +28,7 @@ int main()
         printf("\n");
         printf("Inserting %d\n", arr[i]);
         bpt.insert(arr[i]);
+        printf("Final: \n");
         bpt.pretty_display();
     }
 //    printf("no delete data:\n");
@@ -50,8 +51,9 @@ int main()
     printf("===================================\n");
     printf("deleteing data\n");
     printf("===================================\n\n");
-    int todel[] = {15, 18, 23, 30, 31, 52, 50};
-//    int todel[] = {48, 31, 18};
+//    int todel[] = {15, 18, 23, 30, 31, 52, 50};
+//    int todel[] = {15, 18, 23, 30, 31};
+    int todel[] = {48, 31, 18, 45, 47};
 //
 //    bt.pretty_display();
 //    for(int i = 0; i < sizeof(todel) / sizeof(int); i++) {

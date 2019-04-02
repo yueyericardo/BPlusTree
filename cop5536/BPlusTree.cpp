@@ -112,7 +112,6 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
     }
     printf("splitting\n");
     btree_pretty_display(parent);
-    printf("\n");
     
     return 1;
 }
@@ -144,6 +143,12 @@ void BPlusTree::btree_insert_nonfull(btree_node *node, int target)
         }
 
         btree_insert_nonfull(node->p[pos], target);
+        
+        if(2 * M -1 == node->p[pos]->num) {
+            printf("After parent node insertion, child node has 3 key, index is %d \n", pos);
+            btree_pretty_display(node);
+            btree_split_child(node, pos, node->p[pos]);
+        }
     }
 }
 
@@ -166,6 +171,18 @@ btree_node* BPlusTree::btree_insert(btree_node *root, int target)
         return node;
     } else {
         btree_insert_nonfull(root, target);
+        if (root->num == 2*M - 1) {
+            printf("root has %d nodes\n", root->num);
+            btree_pretty_display(root);
+            btree_node *node = btree_node_new();
+            if (node == NULL) {
+                return root;
+            }
+            node->is_leaf = false;
+            node->p[0] = root;
+            btree_split_child(node, 0, root);
+            return node;
+        }
         return root;
     }
 }
@@ -253,8 +270,12 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
     } else {
         int i = root->num;
         btree_node *y = NULL, *z = NULL;
-        while(i >0 && target < root->k[i-1]) i--;
-        
+        while(i >0 && target < root->k[i-1]) {
+            i--;
+        }
+        if (root->k[i] == target) {
+            printf("target is in internal node, internal node needs to be updated");
+        }
         y = root->p[i];
         if(i < root->num) {
             z = root->p[i+1];
@@ -272,16 +293,18 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
                 printf("shift to right child\n");
                 btree_pretty_display(root);
             } else if(i < root->num && z->num > M - 1) {
+                printf("before shift to left child\n");
+                btree_pretty_display(root);
                 btree_shift_to_left_child(root, i, y, z);
                 printf("shift to left child\n");
                 btree_pretty_display(root);
             } else if(i > 0) {
-                printf("Merging\n");
+                printf("Merging p y\n");
                 btree_merge_child(root, i-1, p, y);
                 btree_pretty_display(root);
                 y = p;
             } else {
-                printf("Merging\n");
+                printf("Merging y z\n");
                 btree_merge_child(root, i, y, z);
                 btree_pretty_display(root);
             }
@@ -294,10 +317,18 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
                 root->k[i-1]=y->k[0];
                 printf("update root, root: %d changed to %d\n", root_before_change ,root->k[i-1]);
             }
+            if (y->k[0] != child0_before_delete && i == 0) {
+                printf("child0 is changed, child0_before: %d, child0_after: %d\n", child0_before_delete, y->k[0]);
+                // TODO if go to tree root, there is no need to update, the code now actually update something he should not touch
+                int root_before_change = root->k[i-1];
+                root->k[i-1]=y->k[0];
+                printf("update root, root: %d changed to %d\n", root_before_change ,root->k[i-1]);
+            }
         } else {
             int child0_before_delete = y->k[0];
+            int child_1_before_delete = y->k[-1];
             btree_delete_nonone(y, target);
-            if (y->k[0] != child0_before_delete && i>0) {
+            if (y->k[0] != child0_before_delete && i>0 && y->is_leaf) {
                 printf("child0 is changed, child0_before: %d, child0_after: %d\n", child0_before_delete, y->k[0]);
                 // TODO if go to tree root, there is no need to update, the code now actually update something he should not touch (solved)
                 // TODO 问题变成了最右面的最小值改变，根结点不会被改变
@@ -305,6 +336,17 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
                 // TODO 内部节点child0改变不应该更新内部节点的父亲
                 int root_before_change = root->k[i-1];
                 root->k[i-1]=y->k[0];
+                printf("update root, root: %d changed to %d\n", root_before_change ,root->k[i-1]);
+            }
+            
+            if (y->k[-1] != child_1_before_delete) {
+                printf("child_1 is changed, child_1_before: %d, child_1_after: %d\n", child_1_before_delete, y->k[-1]);
+                // TODO if go to tree root, there is no need to update, the code now actually update something he should not touch (solved)
+                // TODO 问题变成了最右面的最小值改变，根结点不会被改变
+                // Internal node 不会有重复
+                // TODO 内部节点child0改变不应该更新内部节点的父亲
+                int root_before_change = root->k[i-1];
+                root->k[i-1]=y->k[-1];
                 printf("update root, root: %d changed to %d\n", root_before_change ,root->k[i-1]);
             }
         }
@@ -338,11 +380,12 @@ void BPlusTree::btree_shift_to_right_child(btree_node *root, int pos,
     }
     if(false == z->is_leaf) {
         z->k[0] = root->k[pos];
-        root->k[pos] = y->k[y->num-1];
+//        root->k[pos] = y->k[y->num-1];
+        root->k[pos] = z->k[0];
     } else {
         z->k[0] = y->k[y->num-1];
         printf("root->k %d\n", root->k[pos]);
-        root->k[pos+1] = z->k[0];
+        root->k[pos] = z->k[0];
     }
 
     if(false == z->is_leaf) {
@@ -378,7 +421,7 @@ void BPlusTree::btree_shift_to_left_child(btree_node *root, int pos,
             z->p[j-1] = z->p[j];
         }
     }
-
+    root->k[pos] = z->k[0];
     z->num -= 1;
 }
 
