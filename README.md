@@ -3,7 +3,13 @@
 Implementation of B+Tree.  
 The way how this work is similar to [B+Tree visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
 
-example output:
+Features:
+- insert a key-value pair
+- delete a key
+- search a key
+- search a key range
+
+Output example:
 ```
 
 Inserting 18
