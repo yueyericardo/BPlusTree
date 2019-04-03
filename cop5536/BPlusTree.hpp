@@ -25,7 +25,8 @@ protected:
     virtual void btree_merge_child(btree_node *root, int pos, btree_node *y, btree_node *z);
     virtual void btree_delete_nonone(btree_node *root, int target);
     virtual double* btree_search(btree_node *root, int target);
-//    virtual btree_node* btree_search(btree_node *root, int target1, int target2);
+    virtual btree_node* btree_root_search(btree_node *root, int target);
+    virtual void btree_search(btree_node *root, int target1, int target2);
     virtual int btree_search_successor(btree_node *root);
     virtual int btree_search_predecessor(btree_node *root);
     virtual void btree_shift_to_left_child(btree_node *root, int pos, btree_node *y, btree_node *z);

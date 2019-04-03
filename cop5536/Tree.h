@@ -84,6 +84,8 @@ protected:
     
     virtual double* btree_search(btree_node *root, int target)=0;
 //    virtual btree_node* btree_search(btree_node *root, int target1, int target2)=0;
+    virtual btree_node* btree_root_search(btree_node *root, int target)=0;
+    virtual void btree_search(btree_node *root, int target1, int target2)=0;
     /**
      //     * #brief find the leftmost value
      *
@@ -217,7 +219,17 @@ public:
     
     void Search(int target){
         double* result = btree_search(roots, target);
-        printf("find key %d, the value is %.0f \n", target, *result);
+        if (result) {
+            printf("find key %d, the value is %.0f \n", target, *result);
+        }else{
+            printf("Null");
+        }
+    }
+    
+    void Search(int target1, int target2){
+        printf("in range %d ~ %d: \n", target1, target2);
+        btree_search(roots, target1, target2);
+        printf("\n");
     }
     
 //    void Search(int target1, int target2){

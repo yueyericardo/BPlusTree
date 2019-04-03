@@ -235,34 +235,111 @@ btree_node *BPlusTree::btree_delete(btree_node *root, int target)
     }
 }
 
-double* BPlusTree::btree_search(btree_node *root, int target)
-{
+btree_node* BPlusTree::btree_root_search(btree_node *root, int target){
     if(NULL == root) {
-        return NULL;
+        return nullptr;
     }
     
     int i = root->num;
-    double* result = nullptr;
+
     while(i >0 && target < root->k[i-1]) {
         i--;
     }
-
+    
     if (root->is_leaf) {
-        if (root->k[i-1]  == target) {
-            result = &(root->value[i-1]);
+        return root;
+    }else{
+        btree_node* tmp = root->p[i];
+        return btree_root_search(tmp, target);
+    }
+}
+
+double* BPlusTree::btree_search(btree_node *root, int target)
+{
+    btree_node* target_root = btree_root_search(root, target);
+    if(NULL == target_root) {
+        return nullptr;
+    }
+    
+    int i = target_root->num;
+    double* result = nullptr;
+    while(i >0 && target < target_root->k[i-1]) {
+        i--;
+    }
+
+    if (target_root->k[i-1]  == target) {
+        result = &(target_root->value[i-1]);
 //            printf("%.0f \n",*result);
 //            printf("%.0f \n",result);
 //            std::cout<<result<<std::endl;
-            return result;
-        }else{
-            return nullptr;
-        }
+        return result;
     }else{
-        btree_node* tmp = root->p[i];
-//        while (tmp->is_leaf == false) {
-            return btree_search(tmp, target);
-//        }
+        return nullptr;
     }
+}
+
+void BPlusTree::btree_search(btree_node *root, int target1, int target2)
+{
+    btree_node* target1_root = btree_root_search(root, target1);
+    btree_node* target2_root = btree_root_search(root, target2);
+    if(NULL == target1_root || NULL == target2_root) {
+        printf("nothing found");
+//        return 0;
+    }
+    
+    // search for index of target1
+    int i = target1_root->num;
+    while(i >0 && target1 < target1_root->k[i-1]) {
+        i--;
+    }
+    
+    // search for index of target2
+    int j = target2_root->num;
+    while(j >0 && target2 < target2_root->k[j-1]) {
+        j--;
+    }
+    
+    // print
+    if (target1_root != target2_root) {
+        if (target1 >= target1_root->k[i-1]) {
+            
+            // print the first node
+            btree_node *iter = target1_root;
+            for(int k = i-1; k < iter->num; k++) {
+                printf("%.0f ", iter->value[k]);
+            }
+            
+            // print the middle node
+            iter = iter->next;
+            while (iter != target2_root) {
+                for(int i = 0; i < iter->num; i++) {
+                    printf("%.0f ", iter->value[i]);
+                    //    fwrite(&root,sizeof(root),1,fp);
+                }
+                iter = iter->next;
+            }
+            
+            // print the last node
+            if (iter == target2_root) {
+                for (int k = 0; k < j; k++) {
+                    printf("%.0f ", iter->value[k]);
+                }
+            }
+            printf("\n");
+            //            printf("%.0f \n",*result);
+            //            printf("%.0f \n",result);
+            //            std::cout<<result<<std::endl;
+            //        return result;
+        }else{
+            //        return nullptr;
+        }
+    }else if (target1_root == target2_root){
+        btree_node *iter = target1_root;
+        for(int k = i-1; k < j; k++) {
+            printf("%.0f ", iter->value[k]);
+        }
+    }
+
 }
 //
 //btree_node *BPlusTree::btree_search(btree_node *root, int target, int target2)
