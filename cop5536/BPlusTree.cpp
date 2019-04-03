@@ -28,20 +28,17 @@ btree_node* BPlusTree::btree_node_new()
     if(NULL == node) {
         return NULL;
     }
-
-    for(int i = 0; i < 2 * M -1; i++) {
-        node->key[i] = 0;
-        node->value[i] = 0;
-    }
-
-    for(int i = 0; i < 2 * M; i++) {
-        node->child[i] = NULL;
-    }
-
+    
+    node->key = (int *)calloc((2 * M - 1), sizeof(int));
+    node->value = (double *)calloc((2 * M - 1), sizeof(double));
+    node->child = (btree_node **)calloc(2 * M, sizeof(btree_node*));
+    
+//    x->child = (BT::Node<T>**)realloc(x->child, (x->n + 2) * sizeof(BT::Node<T>*));
+    
     node->num = 0;
     node->is_leaf = true;
-    node->prev = NULL;
-    node->next = NULL;
+    node->prev = nullptr;
+    node->next = nullptr;
     return node;
 }
 

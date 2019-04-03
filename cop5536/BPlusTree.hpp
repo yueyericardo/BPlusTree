@@ -12,17 +12,18 @@
 #define M 2
 
 #include <stdio.h>
+#include <stdlib.h>
 #pragma once
 
 typedef struct btree_nodes {
-    int key[2*M-1];
-    double value[2*M-1];
-    struct btree_nodes *child[2*M];
+    int* key;
+    double* value;
+    struct btree_nodes **child;
     int num;
     bool is_leaf;
     struct btree_nodes *prev;
     struct btree_nodes *next;  
-    
+    ~btree_nodes() {num = 0; free(child); child = nullptr; free(key); key = nullptr; free(value); value = nullptr;}
 } btree_node;
 
 class BPlusTree
