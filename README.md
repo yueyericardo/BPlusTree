@@ -1,6 +1,6 @@
 # BPlusTree
 
-Implementation of B+Tree.  
+C++ Implementation of B+Tree.  
 The way how this work is similar to [B+Tree visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
 
 Features:
