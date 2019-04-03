@@ -18,6 +18,11 @@ bpt.Search(key);
 bpt.Search(key1, key2); 
 ```
 
+Reference:
+- [Intro to Algorithms: CHAPTER 19: B-TREES](http://staff.ustc.edu.cn/~csli/graduate/algorithms/book6/chap19.htm)
+- https://github.com/orange1438/BTree-and-BPlusTree-Realize
+- https://github.com/alvin906/BTree
+
 Output example:
 ```
 m = 2
