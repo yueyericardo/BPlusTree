@@ -28,8 +28,6 @@
 		79989222224EA35B005FB9B9 /* cop5536 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cop5536; sourceTree = BUILT_PRODUCTS_DIR; };
 		79989225224EA35B005FB9B9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7998922E224EACDC005FB9B9 /* bree_intro.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bree_intro.hpp; sourceTree = "<group>"; };
-		7998925A225102F6005FB9B9 /* Tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
-		7998925C225103C7005FB9B9 /* struct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = struct.h; sourceTree = "<group>"; };
 		7998925D22510470005FB9B9 /* BPlusTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BPlusTree.cpp; sourceTree = "<group>"; };
 		7998925E22510470005FB9B9 /* BPlusTree.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BPlusTree.hpp; sourceTree = "<group>"; };
 		7998926022510506005FB9B9 /* main_bplus.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main_bplus.cpp; sourceTree = "<group>"; };
@@ -69,8 +67,6 @@
 				7998925D22510470005FB9B9 /* BPlusTree.cpp */,
 				7998925E22510470005FB9B9 /* BPlusTree.hpp */,
 				7998922E224EACDC005FB9B9 /* bree_intro.hpp */,
-				7998925A225102F6005FB9B9 /* Tree.h */,
-				7998925C225103C7005FB9B9 /* struct.h */,
 				7998926022510506005FB9B9 /* main_bplus.cpp */,
 			);
 			path = cop5536;

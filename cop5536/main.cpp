@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "BTree.hpp"
+//#include "BTree.hpp"
 #include "BPlusTree.hpp"
 //#include "Context.h"
 
@@ -22,10 +22,9 @@ int main()
 //    int arr[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 52, 23, 30, 20, 60, 46, 70, 36};
 //    int arr[] = {18, 31, 12, 10, 15, 48, 45};
     for(int i = 0; i < sizeof(arr) / sizeof(int); i++) {
-//        bt.insert(arr[i]);
         printf("\n");
         printf("Inserting %d\n", arr[i]);
-        bpt.insert(arr[i], value[i]);
+        bpt.Insert(arr[i], value[i]);
         printf("Final: \n");
         bpt.pretty_display();
         bpt.linear_print();
@@ -49,7 +48,7 @@ int main()
 
     for(int i = 0; i < sizeof(todel) / sizeof(int); i++) {
         printf("deleting %d\n", todel[i]);
-        bpt.del(todel[i]);
+        bpt.Delete(todel[i]);
         bpt.pretty_display();
         bpt.linear_print();
         bpt.value_display();
