@@ -58,7 +58,7 @@ protected:
      //     * #param node: tree root
      //     * #param target: target to insert
      */
-    virtual void btree_insert_nonfull(btree_node *node, int target)=0;
+    virtual void btree_insert_nonfull(btree_node *node, int target, double target_value)=0;
     
     /**
      //     * #brief merge y, z and root->k[pos] to left
@@ -82,6 +82,8 @@ protected:
      */
     virtual void btree_delete_nonone(btree_node *root, int target)=0;
     
+    virtual double* btree_search(btree_node *root, int target)=0;
+//    virtual btree_node* btree_search(btree_node *root, int target1, int target2)=0;
     /**
      //     * #brief find the leftmost value
      *
@@ -128,7 +130,7 @@ protected:
      *
      //     * #return: new root of tree
      */
-    virtual btree_node* btree_insert(btree_node *root, int target)=0;
+    virtual btree_node* btree_insert(btree_node *root, int target, double target_value)=0;
     
     /**
      //     * #brief delete a vlue from btree
@@ -156,6 +158,7 @@ protected:
     virtual void btree_level_display(btree_node *root)=0;
     
     virtual void btree_pretty_display(btree_node *root)=0;
+    virtual void btree_value_print(btree_node *root)=0;
     /**
      //     * #Save the btree
      *
@@ -179,9 +182,9 @@ public:
     /*
      //     * #param target: target to insert
      */
-    void insert(int target)
+    void insert(int target, double target_value)
     {
-        roots = btree_insert(roots, target);
+        roots = btree_insert(roots, target, target_value);
         Save(roots);  // 即时保存
     };
     
@@ -198,6 +201,10 @@ public:
         btree_pretty_display(roots);
     };
 
+    void value_display()
+    {
+        btree_value_print(roots);
+    };
     /**
      //     * #brief level print the btree
      */
@@ -207,6 +214,15 @@ public:
         
         Save(roots);  // 即时保存
     };
+    
+    void Search(int target){
+        double* result = btree_search(roots, target);
+        printf("find key %d, the value is %.0f \n", target, *result);
+    }
+    
+//    void Search(int target1, int target2){
+//        btree_search(roots, target1, target2);
+//    }
     
     void inorder_print()
     {

@@ -31,6 +31,7 @@ btree_node* BPlusTree::btree_node_new()
 
     for(int i = 0; i < 2 * M -1; i++) {
         node->k[i] = 0;
+        node->value[i] = 0;
     }
 
     for(int i = 0; i < 2 * M; i++) {
@@ -71,6 +72,7 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
         new_child->num = M - 1;
         for(int i = 0; i < M - 1; i++) {
             new_child->k[i] = child->k[i+M];
+//            new_child->value[i] = child->value[i+M];
         }
         
         for(int i = 0; i < M; i++) {
@@ -82,6 +84,7 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
         new_child->num = M;
         for(int i = 0; i < M; i++) {
             new_child->k[i] = child->k[i+M-1];
+            new_child->value[i] = child->value[i+M-1];
         }
     }
 
@@ -92,13 +95,16 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
 
     for(int i = parent->num - 1; i >= pos; i--) {
         parent->k[i+1] = parent->k[i];
+//        parent->value[i+1] = parent->value[i];
     }
     
     if(false == new_child->is_leaf) {
         parent->k[pos] = child->k[M-1];
+//        parent->value[pos] = child->value[M-1];
     }
     if(true == child->is_leaf) {
         parent->k[pos] = new_child->k[0];
+        parent->value[pos] = new_child->value[0];
     }
     
     parent->num += 1;
@@ -116,16 +122,18 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
     return 1;
 }
 
-void BPlusTree::btree_insert_nonfull(btree_node *node, int target)
+void BPlusTree::btree_insert_nonfull(btree_node *node, int target, double target_value)
 {
     if(true == node->is_leaf) {
         int pos = node->num;
         while(pos >= 1 && target < node->k[pos-1]) {
             node->k[pos] = node->k[pos-1];
+            node->value[pos] = node->value[pos-1];
             pos--;
         }
 
         node->k[pos] = target;
+        node->value[pos] = target_value;
         node->num += 1;
         btree_node_num+=1;
         
@@ -142,11 +150,11 @@ void BPlusTree::btree_insert_nonfull(btree_node *node, int target)
             }
         }
 
-        btree_insert_nonfull(node->p[pos], target);
+        btree_insert_nonfull(node->p[pos], target, target_value);
     }
 }
 
-btree_node* BPlusTree::btree_insert(btree_node *root, int target)
+btree_node* BPlusTree::btree_insert(btree_node *root, int target, double target_value)
 {
     if(NULL == root) {
         return NULL;
@@ -161,10 +169,10 @@ btree_node* BPlusTree::btree_insert(btree_node *root, int target)
         node->is_leaf = false;
         node->p[0] = root;
         btree_split_child(node, 0, root);
-        btree_insert_nonfull(node, target);
+        btree_insert_nonfull(node, target, target_value);
         return node;
     } else {
-        btree_insert_nonfull(root, target);
+        btree_insert_nonfull(root, target, target_value);
         return root;
     }
 }
@@ -175,6 +183,7 @@ void BPlusTree::btree_merge_child(btree_node *root, int pos, btree_node *y, btre
         y->num = 2 * M - 2;
         for(int i = M; i < 2 * M - 1; i++) {
             y->k[i-1] = z->k[i-M];
+            y->value[i-1] = z->value[i-M];
         }
     } else {
         y->num = 2 * M - 1;
@@ -226,20 +235,74 @@ btree_node *BPlusTree::btree_delete(btree_node *root, int target)
     }
 }
 
+double* BPlusTree::btree_search(btree_node *root, int target)
+{
+    if(NULL == root) {
+        return NULL;
+    }
+    
+    int i = root->num;
+    double* result = nullptr;
+    while(i >0 && target < root->k[i-1]) {
+        i--;
+    }
+
+    if (root->is_leaf) {
+        if (root->k[i-1]  == target) {
+            result = &(root->value[i-1]);
+//            printf("%.0f \n",*result);
+//            printf("%.0f \n",result);
+//            std::cout<<result<<std::endl;
+            return result;
+        }else{
+            return nullptr;
+        }
+    }else{
+        btree_node* tmp = root->p[i];
+//        while (tmp->is_leaf == false) {
+            return btree_search(tmp, target);
+//        }
+    }
+}
+//
+//btree_node *BPlusTree::btree_search(btree_node *root, int target, int target2)
+//{
+//    if(1 == root->num) {
+//        btree_node *y = root->p[0];
+//        btree_node *z = root->p[1];
+//        if(NULL != y && NULL != z &&
+//           M - 1 == y->num && M - 1 == z->num) {
+//            printf("Merging p y\n");
+//            btree_merge_child(root, 0, y, z);
+//            btree_pretty_display(y);
+//            free(root);
+//            btree_delete_nonone(y, target);
+//            return y;
+//        } else {
+//            btree_delete_nonone(root, target);
+//            return root;
+//        }
+//    } else {
+//        btree_delete_nonone(root, target);
+//        return root;
+//    }
+//}
+
 void BPlusTree::btree_delete_nonone(btree_node *root, int target)
 {
     if(true == root->is_leaf) {
-        printf("node found in: ");
-        btree_pretty_display(root);
         int i = 0;
         while(i < root->num && target > root->k[i]) {
             i++;
-            
         }
-        printf("%d index is = %d\n", target, i);
+        
         if(target == root->k[i]) {
+            printf("node found in: ");
+            btree_pretty_display(root);
+            printf("%d index is = %d\n", target, i);
             for(int j = i + 1; j < 2 * M - 1; j++) {
                 root->k[j-1] = root->k[j];
+                root->value[j-1] = root->value[j];
             }
             root->num -= 1;
             btree_node_num-=1;
@@ -304,7 +367,7 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
                 printf("----------target is in internal node, internal node needs to be updated--------------\n");
                 printf("before chang: %d ", root->k[i-1]);
                 btree_node *tmp = root->p[i];
-                while (tmp->p[0]) {
+                while (tmp->is_leaf == false) {
                     tmp = tmp->p[0];
                 }
                 root->k[i-1] = tmp->k[0];
@@ -336,15 +399,21 @@ void BPlusTree::btree_shift_to_right_child(btree_node *root, int pos,
                                            btree_node *y, btree_node *z)
 {
     z->num += 1;
-    for(int i = z->num -1; i > 0; i--) {
-        z->k[i] = z->k[i-1];
-    }
+
     if(false == z->is_leaf) {
+        for(int i = z->num -1; i > 0; i--) {
+            z->k[i] = z->k[i-1];
+        }
         z->k[0] = root->k[pos];
         root->k[pos] = y->k[y->num-1];
 //        root->k[pos] = z->k[0];
     } else {
+        for(int i = z->num -1; i > 0; i--) {
+            z->k[i] = z->k[i-1];
+            z->value[i] = z->value[i-1];
+        }
         z->k[0] = y->k[y->num-1];
+        z->value[0] = y->value[y->num-1];
 //        printf("root->k %d\n", root->k[pos]);
         root->k[pos] = z->k[0];
     }
@@ -370,11 +439,13 @@ void BPlusTree::btree_shift_to_left_child(btree_node *root, int pos,
 //        printf("%d", root->k[pos]);
     } else {
         y->k[y->num-1] = z->k[0];
+        y->value[y->num-1] = z->value[0];
         root->k[pos] = z->k[0];
     }
 
     for(int j = 1; j < z->num; j++) {
         z->k[j-1] = z->k[j];
+        z->value[j-1] = z->value[j];
     }
 
     if(false == z->is_leaf) {
@@ -413,6 +484,26 @@ void BPlusTree::btree_linear_print(btree_node *root)
         do {
             for(int i = 0; i < iter->num; i++) {
                 printf("%d ", iter->k[i]);
+                //    fwrite(&root,sizeof(root),1,fp);
+            }
+            iter = iter->next;
+        } while(iter != leftmost);
+        printf("\n");
+    }
+}
+
+void BPlusTree::btree_value_print(btree_node *root)
+{
+    if(NULL != root) {
+        btree_node *leftmost = root;
+        while(false == leftmost->is_leaf) {
+            leftmost = leftmost->p[0];
+        }
+        
+        btree_node *iter = leftmost;
+        do {
+            for(int i = 0; i < iter->num; i++) {
+                printf("%.0f ", iter->value[i]);
                 //    fwrite(&root,sizeof(root),1,fp);
             }
             iter = iter->next;

@@ -10,14 +10,14 @@
 #include <stdlib.h>
 #include "BTree.hpp"
 #include "BPlusTree.hpp"
-#include "Context.h"
+//#include "Context.h"
 
 int main()
 {
-    BTree bt;
     BPlusTree bpt;
     
     int arr[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 63, 56, 90, 87, 77, 66, 52, 23, 30, 20};
+    double value[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 63, 56, 90, 87, 77, 66, 52, 23, 30, 20};
 //    int arr[] = {62, 89, 79, 80, 92, 50, 58, 24, 61, 99, 48, 70, 35, 97, 72, 6, 53, 3, 59, 52, 83, 93, 13, 23, 56, 60, 42, 41, 86, 84, 67, 96, 65, 10, 64, 55, 73, 29, 68, 31, 46, 57, 14, 12, 43, 26, 4, 16, 19, 32, 37, 91, 30, 9, 11, 27, 33, 74, 25, 15, 94, 51, 47, 34, 18, 69, 54, 17, 1, 2, 78, 66, 77, 5, 45, 40, 87, 39, 8, 88, 20, 36, 22, 0, 81, 75, 85, 38, 7, 82, 76, 98, 71, 63, 21, 28, 95, 44, 90, 49};
 //    int arr[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 52, 23, 30, 20, 60, 46, 70, 36};
 //    int arr[] = {18, 31, 12, 10, 15, 48, 45};
@@ -25,9 +25,11 @@ int main()
 //        bt.insert(arr[i]);
         printf("\n");
         printf("Inserting %d\n", arr[i]);
-        bpt.insert(arr[i]);
+        bpt.insert(arr[i], value[i]);
         printf("Final: \n");
         bpt.pretty_display();
+        bpt.linear_print();
+        bpt.value_display();
     }
 
     printf("\n");
@@ -48,8 +50,14 @@ int main()
         printf("deleting %d\n", todel[i]);
         bpt.del(todel[i]);
         bpt.pretty_display();
+        bpt.linear_print();
+        bpt.value_display();
         printf("\n");
     }
     bpt.linear_print();
+    
+    bpt.Search(52);
+    bpt.Search(20);
+    bpt.Search(15);
 }
 

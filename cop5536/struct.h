@@ -15,7 +15,7 @@
 
 typedef struct btree_nodes {
     int k[2*M-1];
-//    double v[2*M-1];
+    double value[2*M-1];
     struct btree_nodes *p[2*M];
     int num;
     bool is_leaf;
