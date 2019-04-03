@@ -9,18 +9,9 @@
 #include "BPlusTree.hpp"
 
 #include <iostream>
-//#include "struct.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include<queue>
-
-#ifdef WIN32
-#include <io.h>
-#endif
-
-#ifdef LINUX
-#include <unistd.h>
-#endif
 
 btree_node* BPlusTree::btree_node_new()
 {
@@ -28,12 +19,12 @@ btree_node* BPlusTree::btree_node_new()
     if(NULL == node) {
         return NULL;
     }
-    
     node->key = (int *)calloc((2 * M - 1), sizeof(int));
     node->value = (double *)calloc((2 * M - 1), sizeof(double));
     node->child = (btree_node **)calloc(2 * M, sizeof(btree_node*));
-    
-//    x->child = (BT::Node<T>**)realloc(x->child, (x->n + 2) * sizeof(BT::Node<T>*));
+    if(NULL == node->key || NULL == node->value || NULL == node->child) {
+        return NULL;
+    }
     
     node->num = 0;
     node->is_leaf = true;
@@ -322,13 +313,6 @@ void BPlusTree::btree_search(btree_node *root, int target1, int target2)
                     printf("%.0f ", iter->value[k]);
                 }
             }
-            printf("\n");
-            //            printf("%.0f \n",*result);
-            //            printf("%.0f \n",result);
-            //            std::cout<<result<<std::endl;
-            //        return result;
-        }else{
-            //        return nullptr;
         }
     }else if (target1_root == target2_root){
         btree_node *iter = target1_root;
@@ -338,29 +322,6 @@ void BPlusTree::btree_search(btree_node *root, int target1, int target2)
     }
 
 }
-//
-//btree_node *BPlusTree::btree_search(btree_node *root, int target, int target2)
-//{
-//    if(1 == root->num) {
-//        btree_node *y = root->child[0];
-//        btree_node *z = root->child[1];
-//        if(NULL != y && NULL != z &&
-//           M - 1 == y->num && M - 1 == z->num) {
-//            printf("Merging p y\n");
-//            btree_merge_child(root, 0, y, z);
-//            btree_pretty_display(y);
-//            free(root);
-//            btree_delete_nonone(y, target);
-//            return y;
-//        } else {
-//            btree_delete_nonone(root, target);
-//            return root;
-//        }
-//    } else {
-//        btree_delete_nonone(root, target);
-//        return root;
-//    }
-//}
 
 void BPlusTree::btree_delete_nonone(btree_node *root, int target)
 {
@@ -623,18 +584,6 @@ void BPlusTree::linear_print()
     btree_linear_print(roots);
 }
 
-
-BPlusTree::BPlusTree(void)
-{
-    roots = btree_create();
-}
-
-
-BPlusTree::~BPlusTree(void)
-{
-
-}
-
 void BPlusTree::pretty_display(){
     btree_pretty_display(roots);
 }
@@ -643,4 +592,22 @@ void BPlusTree::value_display(){
 }
 void BPlusTree::NodeNum_print(){
     printf("%d\n", btree_node_num);
+}
+
+void BPlusTree::post_order_delete(btree_node*& node) {
+    if (node->is_leaf) {  //直接删除叶子结点
+//        delete[] node->key;
+//        delete[] node->value;
+        delete node;
+        node = nullptr;
+    }
+    else { //递归地删除每个孩子
+        for (int i = 0; i < node->num + 1; ++i) {
+            post_order_delete(node->child[i]);
+        }
+//        delete[] node->key;
+//        delete[] node->value;
+        delete node;
+        node = nullptr;
+    }
 }

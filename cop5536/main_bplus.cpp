@@ -28,9 +28,9 @@
 ////    Menu();
 //    BTree<int>* bt = nullptr;
 ////    bool flag = true;
-//    bt = new BTree<int>(2);
+//    bt = new BTree<int>(3);
 //
-//    int arr[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 52, 23, 30, 20};
+//    int arr[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 52, 23, 30, 20, 60, 70, 80, 66, 77, 88, 55};
 //    for(int i = 0; i < sizeof(arr) / sizeof(int); i++) {
 //        printf("after insert %d\n", arr[i]);
 //        bt->B_Tree_Insert(arr[i]);
