@@ -22,6 +22,7 @@ Output example:
 ```
 m = 2
 
+
 Inserting 18
 Final: 
 ( 18 )
@@ -337,10 +338,12 @@ find key 52, the value is 52
 find key 20, the value is 20 
 find key 15, the value is 15 
 in range 12 ~ 13: 12 
-in range 50 ~ 87: 30 52 56 63 66 77 87 
+in range 50 ~ 87: 52 56 63 66 77 87 
 in range 63 ~ 63: 63 
 in range 56 ~ 66: 56 63 66 
-in range 50 ~ 87: 30 52 56 63 66 77 87 
+in range 50 ~ 87: 52 56 63 66 77 87 
+in range 50 ~ 86: 52 56 63 66 77 
+in range 50 ~ 88: 52 56 63 66 77 87 
 
 Program ended with exit code: 0
 ```
