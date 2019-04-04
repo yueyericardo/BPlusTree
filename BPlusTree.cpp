@@ -293,7 +293,10 @@ void BPlusTree::btree_search(btree_node *root, int target1, int target2)
             
             // print the first node
             btree_node *iter = target1_root;
-            for(int k = i-1; k < iter->num; k++) {
+            if (target1 == target1_root->key[i-1]) {
+                printf("%.0f ", iter->value[i-1]);
+            }
+            for(int k = i; k < iter->num; k++) {
                 printf("%.0f ", iter->value[k]);
             }
             
