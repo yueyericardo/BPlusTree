@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<queue>
+#include <vector>
 
 btree_node* BPlusTree::btree_node_new()
 {
@@ -266,13 +267,16 @@ double* BPlusTree::btree_search(btree_node *root, int target)
     }
 }
 
-void BPlusTree::btree_search(btree_node *root, int target1, int target2)
-{
+std::vector<double> BPlusTree::btree_search(btree_node *root, int target1, int target2){
     btree_node* target1_root = btree_root_search(root, target1);
     btree_node* target2_root = btree_root_search(root, target2);
+    
+    std::vector<double> result;
+    
     if(NULL == target1_root || NULL == target2_root) {
         printf("nothing found");
 //        return 0;
+        return result;
     }
     
     // search for index of target1
@@ -293,16 +297,18 @@ void BPlusTree::btree_search(btree_node *root, int target1, int target2)
             
             // print the first node
             btree_node *iter = target1_root;
-            for(int k = i-1; k < iter->num; k++) {
-                printf("%.0f ", iter->value[k]);
+            if (target1 == target1_root->key[i-1]) {
+                result.push_back(iter->value[i-1]);
+            }
+            for(int k = i; k < iter->num; k++) {
+                result.push_back(iter->value[k]);
             }
             
             // print the middle node
             iter = iter->next;
             while (iter != target2_root) {
                 for(int i = 0; i < iter->num; i++) {
-                    printf("%.0f ", iter->value[i]);
-                    //    fwrite(&root,sizeof(root),1,fp);
+                    result.push_back(iter->value[i]);
                 }
                 iter = iter->next;
             }
@@ -310,17 +316,31 @@ void BPlusTree::btree_search(btree_node *root, int target1, int target2)
             // print the last node
             if (iter == target2_root) {
                 for (int k = 0; k < j; k++) {
-                    printf("%.0f ", iter->value[k]);
+                    result.push_back(iter->value[k]);
                 }
             }
+
         }
     }else if (target1_root == target2_root){
         btree_node *iter = target1_root;
-        for(int k = i-1; k < j; k++) {
-            printf("%.0f ", iter->value[k]);
+        
+        // target 2 smaller than smallest key, return null
+        if (target2 < iter->key[0]) {
+            return result;
+        }
+        // target 1 bigger than biggest key, return null
+        else if(target1 > iter->key[iter->num -1]) {
+            return result;
+        }
+        // print this range at this node
+        if (target1 == target1_root->key[i-1]) {
+            result.push_back(iter->value[i-1]);
+        }
+        for(int k = i; k < j; k++) {
+            result.push_back(iter->value[k]);
         }
     }
-
+    return result;
 }
 
 void BPlusTree::btree_delete_nonone(btree_node *root, int target)

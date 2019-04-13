@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector> 
 #pragma once
 
 typedef struct btree_nodes {
@@ -55,7 +56,7 @@ private:
     
     // search
     double* btree_search(btree_node *root, int target);
-    void btree_search(btree_node *root, int target1, int target2);
+    std::vector<double> btree_search(btree_node *root, int target1, int target2);
     btree_node* btree_root_search(btree_node *root, int target);
     void post_order_delete(btree_node*& root);
     void Save(btree_node *root);
@@ -81,18 +82,28 @@ public:
     void NodeNum_print();
     
     // search
-    void Search(int target){
+    double* Search(int target){
         double* result = btree_search(roots, target);
         if (result) {
-            printf("find key %d, the value is %.0f \n", target, *result);
+            printf("find key %d, the value is %f \n", target, *result);
+            return result;
         }else{
-            printf("Null");
+            printf("Could not find key %d\n", target);
+            printf("Null\n");
+            return nullptr;
         }
+        return nullptr;
     }
-    void Search(int target1, int target2){
+    std::vector<double> Search(int target1, int target2){
         printf("in range %d ~ %d: ", target1, target2);
-        btree_search(roots, target1, target2);
+        std::vector<double> result = btree_search(roots, target1, target2);
+        for(int i = 0; i < result.size(); i++){
+            printf("%lf ", result[i]);
+        }
+//        int size = result.size();
+//        printf("\nsize: %d ", size);
         printf("\n");
+        return result;
     }
 };
 
