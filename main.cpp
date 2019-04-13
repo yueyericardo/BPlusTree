@@ -147,12 +147,11 @@ int main(int argc,char **argv) {
     BPlusTree bpt = BPlusTree(key1) ;
     printf("%s BPlustree, m = %d\n", command, key1);
     
-    
     if (inputfile.is_open()){
-        while (getline(inputfile, line))
-        {
+        while (getline(inputfile, line)){
+            
              printf("----------------------------------------------\n");
-            std::cout << line << '\n';
+//            std::cout << line << '\n';
 
             char* buffer = strdup(line.c_str());
             char command[20];
@@ -168,7 +167,7 @@ int main(int argc,char **argv) {
             else{
                 run(command, key1, key2, &bpt, outputfile);
             }
-            
+            bpt.pretty_display();
             free(buffer);
         }
         inputfile.close();

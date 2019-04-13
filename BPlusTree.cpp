@@ -363,7 +363,7 @@ void BPlusTree::btree_delete_nonone(btree_node *root, int target)
             btree_node_num-=1;
 
         } else {
-            printf("root is_leaf %d\n", root->is_leaf);
+//            printf("root is_leaf %d\n", root->is_leaf);
             printf("===================================\n");
             printf("target not found\n");
             printf("===================================\n");

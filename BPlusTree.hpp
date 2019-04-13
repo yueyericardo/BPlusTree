@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector> 
-#pragma once
+//#pragma once
 
 typedef struct btree_nodes {
     int* key;
