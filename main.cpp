@@ -132,8 +132,8 @@ void test(BPlusTree *bpt){
 
 int main(int argc,char **argv) {
     
-//    ifstream inputfile (argv[1]);
-    ifstream inputfile ("example_input.txt");
+    ifstream inputfile (argv[1]);
+//    ifstream inputfile ("example_input.txt");
     ofstream outputfile ("output_file.txt");
     
     string line;
