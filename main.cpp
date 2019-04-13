@@ -14,6 +14,7 @@
 #include <regex>
 using namespace std;
 
+
 // if the command is Insert, Delete, or Search one key
 void run(char* com, int key1, double key2, BPlusTree *bpt, std::ofstream& outputfile){
     string command = com;
@@ -68,6 +69,7 @@ void run_search_twokey(int key1, double key2, BPlusTree *bpt, std::ofstream& out
 
 // Test
 void test(BPlusTree *bpt){
+
     int arr[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 63, 56, 90, 87, 77, 66, 52, 23, 30, 20};
     double value[] = {18, 31, 12, 10, 15, 48, 45, 47, 50, 63, 56, 90, 87, 77, 66, 52, 23, 30, 20};
     for(int i = 0; i < sizeof(arr) / sizeof(int); i++) {
