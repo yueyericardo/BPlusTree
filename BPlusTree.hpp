@@ -59,7 +59,6 @@ private:
     std::vector<double> btree_search(btree_node *root, int target1, int target2);
     btree_node* btree_root_search(btree_node *root, int target);
     void post_order_delete(btree_node*& root);
-    void Save(btree_node *root);
 
 public:
     //construct deconstruct
@@ -69,7 +68,6 @@ public:
     // insert
     void Insert(int target, double target_value){
         roots = btree_insert(roots, target, target_value);
-        Save(roots);  // 即时保存
     };
     
     // delete

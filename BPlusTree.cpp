@@ -68,7 +68,7 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
             new_child->child[i] = child->child[i+M];
         }
     }
-    // not leaf, left: M-1, right:M, right[0] go up level
+    // is leaf, left: M-1, right:M, right[0] go up level
     if(true == child->is_leaf) {
         new_child->num = M;
         for(int i = 0; i < M; i++) {
@@ -84,12 +84,10 @@ int BPlusTree::btree_split_child(btree_node *parent, int pos, btree_node *child)
 
     for(int i = parent->num - 1; i >= pos; i--) {
         parent->key[i+1] = parent->key[i];
-//        parent->value[i+1] = parent->value[i];
     }
     
     if(false == new_child->is_leaf) {
         parent->key[pos] = child->key[M-1];
-//        parent->value[pos] = child->value[M-1];
     }
     if(true == child->is_leaf) {
         parent->key[pos] = new_child->key[0];
@@ -553,11 +551,6 @@ void BPlusTree::btree_value_print(btree_node *root)
         } while(iter != leftmost);
         printf("\n");
     }
-}
-
-void BPlusTree::Save(btree_node *root)
-{
-    //    fwrite(root,sizeof(root),1,pfile);
 }
 
 void BPlusTree::btree_pretty_display(btree_node *root)
