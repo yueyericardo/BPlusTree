@@ -608,13 +608,13 @@ void BPlusTree::NodeNum_print(){
 }
 
 void BPlusTree::post_order_delete(btree_node*& node) {
-    if (node->is_leaf) {  //直接删除叶子结点
+    if (node->is_leaf) {  //Delete leaf directly
 //        delete[] node->key;
 //        delete[] node->value;
         delete node;
         node = nullptr;
     }
-    else { //递归地删除每个孩子
+    else { // delete every child
         for (int i = 0; i < node->num + 1; ++i) {
             post_order_delete(node->child[i]);
         }

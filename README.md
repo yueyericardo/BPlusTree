@@ -1,15 +1,23 @@
-# BPlusTree
+<h2><center> COP 5536 Project Report: B+ Tree</center></h2>
+<p style="text-align: center; margin-top: 5px;">
+Jinze Xue &nbsp;/&nbsp; 2019.04.02 &nbsp;<br>
+Email: jinzexue@ufl.edu &nbsp;/&nbsp; UFID: 38239101<br>
+Repo: <a href="https://github.com/yueyericardo/BPlusTree">https://github.com/yueyericardo/BPlusTree</a>, will be public after 2019.04.14 12PM.
+</p>
 
-C++ Implementation of B+Tree.  
-The way how this work is similar to [B+Tree visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
 
-Features:
-- insert a key-value pair (key:int, value:double)
-- delete a key
-- search a key
-- search a key range
 
-Usage:  
+### 0. C++ Implementation of B+Tree. 
+
+- The way how this work is similar to [B+Tree visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
+
+- Features:
+  - insert a key-value pair (key:int, value:double)
+  - delete a key
+  - search a key
+  - search a key range
+
+- Usage:  
 ```c++
 BPlusTree bpt = BPlusTree(m); //m is the degree of B+ tree
 bpt.Insert(key, value);
@@ -18,10 +26,95 @@ bpt.Search(key);
 bpt.Search(key1, key2); 
 ```
 
-Output example:
-```
-m = 2
 
+
+### 1. For every node it has the structure of below
+
+```c++
+typedef struct btree_nodes {
+    int* key; 										// 2 * M - 1
+    double* value;								// 2 * M - 1
+    struct btree_nodes **child;		// 2 * M
+    int num;
+    bool is_leaf;
+    struct btree_nodes *prev;
+    struct btree_nodes *next;  
+    ~btree_nodes() {num = 0; free(child); child = nullptr; free(key); key = nullptr; free(value); value = nullptr;}
+} btree_node;
+```
+
+​	
+
+### 2. For BPlusTree Class
+
+```c++
+class BPlusTree
+{
+private:
+    // basic data
+    btree_node *roots;
+    int btree_node_num;
+    int M;
+    
+    // insert key
+    btree_node* btree_create();
+    btree_node* btree_node_new();
+    btree_node* btree_insert(btree_node *root, int target, double target_value);
+    void btree_insert_nonfull(btree_node *node, int target, double target_value);
+    int btree_split_child(btree_node *parent, int pos, btree_node *child);
+    
+    // delete key
+    btree_node *btree_delete(btree_node *root, int target);
+    void btree_delete_nonone(btree_node *root, int target);
+    void btree_merge_child(btree_node *root, int pos, btree_node *y, btree_node *z);
+    int btree_search_successor(btree_node *root);
+    int btree_search_predecessor(btree_node *root);
+    void btree_shift_to_left_child(btree_node *root, int pos, btree_node *y, btree_node *z);
+    void btree_shift_to_right_child(btree_node *root, int pos, btree_node *y, btree_node *z);
+    
+    // print
+    void btree_pretty_display(btree_node *root);
+    void btree_linear_print(btree_node *root);
+    void btree_value_print(btree_node *root);
+    
+    // search
+    double* btree_search(btree_node *root, int target);
+    std::vector<double> btree_search(btree_node *root, int target1, int target2);
+    btree_node* btree_root_search(btree_node *root, int target);
+    void post_order_delete(btree_node*& root);
+    void Save(btree_node *root);
+
+public:
+    //construct deconstruct
+    BPlusTree(int m) {M = m; roots = btree_create(); btree_node_num = 0;};
+    ~BPlusTree(){post_order_delete(roots);};
+    
+    // insert
+    void Insert(int target, double target_value);
+    
+    // delete
+    void Delete(int target) {roots = btree_delete(roots, target);};
+    
+    // print
+    void linear_print();
+    void pretty_display();
+    void value_display();
+    void NodeNum_print();
+    
+    // search
+    double* Search(int target);
+    std::vector<double> Search(int target1, int target2);
+};
+```
+
+
+
+### 3. Output example:
+
+in this example, the degree of tree == 2. to check it's working well, the value and key have the same number.
+
+```c++
+m = 2
 
 Inserting 18
 Final: 
@@ -348,7 +441,10 @@ in range 50 ~ 88: 52 56 63 66 77 87
 Program ended with exit code: 0
 ```
 
-Reference:
+
+
+### 4. Reference:
+
 - [Intro to Algorithms: CHAPTER 19: B-TREES](http://staff.ustc.edu.cn/~csli/graduate/algorithms/book6/chap19.htm)
 - https://github.com/orange1438/BTree-and-BPlusTree-Realize
 - https://github.com/alvin906/BTree
