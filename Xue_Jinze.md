@@ -10,13 +10,11 @@ Repo: https://github.com/yueyericardo/BPlusTree, will be public after 2019.04.14
 ### 0. C++ Implementation of B+Tree. 
 
 - The way how this work is similar to [B+Tree visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
-
 - Features:
   - insert a key-value pair (key:int, value:double)
   - delete a key
   - search a key
   - search a key range
-
 - Usage:  
 ```c++
 BPlusTree bpt = BPlusTree(m); //m is the degree of B+ tree
