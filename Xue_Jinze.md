@@ -2,7 +2,7 @@
 <p style="text-align: center; margin-top: 5px;">
 Jinze Xue &nbsp;/&nbsp; 2019.04.02 &nbsp;<br>
 Email: jinzexue@ufl.edu &nbsp;/&nbsp; UFID: 38239101<br>
-Repo: <a href="https://github.com/yueyericardo/BPlusTree">https://github.com/yueyericardo/BPlusTree</a>, will be public after 2019.04.14 12PM.
+Repo: https://github.com/yueyericardo/BPlusTree, will be public after 2019.04.14 12PM.
 </p>
 
 
@@ -17,7 +17,7 @@ Repo: <a href="https://github.com/yueyericardo/BPlusTree">https://github.com/yue
   - search a key
   - search a key range
 
-Usage:  
+- Usage:  
 ```c++
 BPlusTree bpt = BPlusTree(m); //m is the degree of B+ tree
 bpt.Insert(key, value);
@@ -32,9 +32,9 @@ bpt.Search(key1, key2);
 
 ```c++
 typedef struct btree_nodes {
-    int* key; 										// 2 * M - 1
-    double* value;								// 2 * M - 1
-    struct btree_nodes **child;		// 2 * M
+    int* key;   // 2 * M - 1
+    double* value;  // 2 * M - 1
+    struct btree_nodes **child;  // 2 * M
     int num;
     bool is_leaf;
     struct btree_nodes *prev;
