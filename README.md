@@ -1,4 +1,4 @@
-<h2><center> COP 5536 Project: B+ Tree</center></h2>
+<h2><center>COP 5536 (Advanced Data Structure) Project: B+ Tree</center></h2>
 <p style="text-align: center; margin-top: 5px;">
 Jinze Xue &nbsp;/&nbsp; 2019.04.02 &nbsp;<br>
 Repo: <a href="https://github.com/yueyericardo/BPlusTree">https://github.com/yueyericardo/BPlusTree</a>, public at 2019.04.14 12PM.
